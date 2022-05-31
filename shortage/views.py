@@ -42,7 +42,7 @@ def upload(request):
 def uploaded_files(request):
     #connection to DB 
         try:
-            conn= psycopg2.connect(host='localhost', dbname='latecoere_db', user='postgres', password='054Ibiza',port='5432') 
+            conn= psycopg2.connect(host='localhost', dbname='shortage_db', user='postgres', password='054Ibiza',port='5432') 
             file_mb52=pathlib.Path(r'C:\Users\L0005082\Documents\Input SAP\MB52 ALL.xlsx')
             file_se16ncepc=pathlib.Path(r'C:\Users\L0005082\Documents\Input SAP\cepc.xlsx')
             file_se16nt001l=pathlib.Path(r'C:\Users\L0005082\Documents\Input SAP\T001l.xlsx')
