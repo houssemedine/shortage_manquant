@@ -1006,7 +1006,7 @@ def overview(request):
     # df_mdma['key']=df_mdma['year'].astype(str)+df_mdma['week'].astype(str)+df_mdma['material'].astype(str)+df_mdma['division'].astype(str)
     # #Convert to Dict
     # df_mdma_dict_planning_unit=dict(zip(df_mdma.key,df_mdma.planning_unit)) 
-
+    
     df_mara_marc.insert(0,'mrp_area',None,True)
     df_mara_marc['mrp_area']=np.where( ((df_mara_marc['a_s'] == '5A') | (df_mara_marc['a_s'] == '5B')) & (df_mara_marc['division'].astype(str)=='2110') ,'2000-2091',df_mara_marc['mrp_area'])
     df_mara_marc['mrp_area']=np.where( ((df_mara_marc['a_s'] == '5A') | (df_mara_marc['a_s'] == '5B')) & (df_mara_marc['division'].astype(str)=='2400') ,'2000-2092',df_mara_marc['mrp_area'])
