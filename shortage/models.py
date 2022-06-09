@@ -151,7 +151,7 @@ class ZMM_CARNET_CDE_IS(models.Model): #Model For File  ZMM_CARNET_CDE_IS
      validated_by = models.CharField(max_length=50,null=True) #Validé par			      
      priority = models.CharField(max_length=50,null=True) #Priorité de l'ordre			
      quantity = models.FloatField(null=True)              #Quantité de commande			       
-     quantity_to_receive = models.FloatField(null=True)              #Quantité à réceptionner			
+     quantity_to_receive = models.CharField(max_length=30,null=True)              #Quantité à réceptionner			
      date_of_purchase = models.DateTimeField(null=True)               #Date d'achat			       
      desired_date = models.DateTimeField(null=True)               #date souhaitée	
      original_delivery_date = models.DateTimeField(null=True)               #Date de livraison initiale				
@@ -159,19 +159,19 @@ class ZMM_CARNET_CDE_IS(models.Model): #Model For File  ZMM_CARNET_CDE_IS
      validated_delivery_date = models.DateTimeField(null=True)               #Date de livraison validée	
      confirmed_quantity = models.FloatField(null=True)              #Quantité confirmée
      comment = models.CharField(max_length=500,null=True) #Commentaire Appros				           
-     expected_stock_week_w = models.FloatField(null=True)              #Stock Prévu Semaine S		
-     expected_stock_week_w_1 = models.FloatField(null=True)              #Stock Prévu Semaine S+1		
-     expected_stock_week_w_2 = models.FloatField(null=True)              #Stock Prévu Semaine S+2		
-     expected_stock_week_w_3 = models.FloatField(null=True)              #Stock Prévu Semaine S+3		
-     expected_stock_week_w_4 = models.FloatField(null=True)              #Stock Prévu Semaine S+4		
-     expected_stock_week_w_5 = models.FloatField(null=True)              #Stock Prévu Semaine S+5		
-     expected_stock_week_w_6 = models.FloatField(null=True)              #Stock Prévu Semaine S+6	
-     expected_stock_week_w_7 = models.FloatField(null=True)              #Stock Prévu Semaine S+7	
-     expected_stock_week_w_8 = models.FloatField(null=True)              #Stock Prévu Semaine S+8		
-     expected_stock_week_w_9 = models.FloatField(null=True)              #Stock Prévu Semaine S+9		
-     expected_stock_week_w_10 = models.FloatField(null=True)              #Stock Prévu Semaine S+10	
-     expected_stock_week_w_11 = models.FloatField(null=True)              #Stock Prévu Semaine S+11	
-     expected_stock_week_w_12 = models.FloatField(null=True)              #Stock Prévu Semaine S+12
+     expected_stock_week_w = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S		
+     expected_stock_week_w_1 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+1		
+     expected_stock_week_w_2 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+2		
+     expected_stock_week_w_3 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+3		
+     expected_stock_week_w_4 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+4		
+     expected_stock_week_w_5 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+5		
+     expected_stock_week_w_6 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+6	
+     expected_stock_week_w_7 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+7	
+     expected_stock_week_w_8 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+8		
+     expected_stock_week_w_9 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+9		
+     expected_stock_week_w_10 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+10	
+     expected_stock_week_w_11 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+11	
+     expected_stock_week_w_12 = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S+12
      confirmation = models.CharField(max_length=30,null=True) #Confirmation ordre					
      estimated_delivery_time = models.CharField(null=True,max_length=20)              #Délai prévisionnel de livraison (en jrs)
      comment_vendor = models.CharField(max_length=500,null=True) #Commentaires fournisseur	

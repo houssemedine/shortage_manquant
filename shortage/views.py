@@ -1,5 +1,6 @@
 # Create your views here.
 from __future__ import division
+import imp
 from inspect import CO_ASYNC_GENERATOR
 from io import StringIO
 from turtle import st
@@ -18,14 +19,14 @@ from django.db.models import Q
 from .decorators import allowed_users
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from administration.templates import administration
-
-
+import urllib.request
+from django.http import HttpResponse
 from shortage.models import *
 #function to upload files
 
 
 def upload(request):
-    #Delete all data before upload
+    # Delete all data before upload
     MB52.objects.all().delete()
     SE16N_CEPC.objects.all().delete()
     SE16N_T001L.objects.all().delete()
@@ -38,33 +39,35 @@ def upload(request):
     uploaded_files(request)  #call function to upload files
     return redirect ('files_list')
 
+
 #Upload Files and check if exist   
 def uploaded_files(request):
     #connection to DB 
+        # file=urllib.request.urlopen('http://sp-is.lat.corp/Pages/Default.aspx')
+        # readfile=pd.read_excel(file)
         try:
             conn= psycopg2.connect(host='localhost', dbname='shortage_db', user='postgres', password='054Ibiza',port='5432') 
-            file_mb52=pathlib.Path(r'C:\Users\L0005082\Documents\Input SAP\MB52 ALL.xlsx')
-            file_se16ncepc=pathlib.Path(r'C:\Users\L0005082\Documents\Input SAP\cepc.xlsx')
-            file_se16nt001l=pathlib.Path(r'C:\Users\L0005082\Documents\Input SAP\T001l.xlsx')
-            file_se16nt024=pathlib.Path(r'C:\Users\L0005082\Documents\Input SAP\T024.xlsx')
-            file_zmm=pathlib.Path( r'C:\Users\L0005082\Documents\Input SAP\ZMM_CARNET_CDE_IS.xlsx')
-            file_st=pathlib.Path(r'C:\Users\L0005082\Documents\Input SAP\stock_transit.xlsx')
-            file_art=pathlib.Path( r'C:\Users\L0005082\Documents\Input SAP\ART_MARA_MARC_GLOBAL_202214.xlsx')
-            file_md=pathlib.Path(r'C:\Users\L0005082\Documents\Input SAP\MDMA.xlsx')
+            file_mb52=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\MB52 ALL.xlsx')
+            file_se16ncepc=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\cepc.xlsx')
+            file_se16nt001l=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\T001l.xlsx')
+            file_se16nt024=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\T024.xlsx')
+            file_zmm=pathlib.Path( r'\\prfoufiler01\donnees$\Public\Input SAP\ZMM_CARNT_CDE_20220510_PRD.xlsx')
+            file_st=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\Transit.xlsx')
+            file_art=pathlib.Path( r'\\prfoufiler01\donnees$\Public\Input SAP\ART_MARA_MARC_GLOBAL_202219.xlsx')
+            file_md=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\MDMA.xlsx')
             zpp_md_stock={
-                "2500":r"C:\Users\L0005082\Documents\Input SAP\2500_ZPP_MD_STOCK.xlsx",
-                "2600":r"C:\Users\L0005082\Documents\Input SAP\2600_ZPP_MD_STOCK.xlsx",
-                "2400":r"C:\Users\L0005082\Documents\Input SAP\2400_ZPP_MD_STOCK.xlsx",
-                "2010":r"C:\Users\L0005082\Documents\Input SAP\2010_ZPP_MD_STOCK.xlsx",
-                "2110":r"C:\Users\L0005082\Documents\Input SAP\2110_ZPP_MD_STOCK.xlsx",
-                "2200":r"C:\Users\L0005082\Documents\Input SAP\2200_ZPP_MD_STOCK.xlsx",
-                "2000":r"C:\Users\L0005082\Documents\Input SAP\2000_ZPP_MD_STOCK.xlsx",
-                "2030":r"C:\Users\L0005082\Documents\Input SAP\2030_ZPP_MD_STOCK.xlsx",
-                "2020":r"C:\Users\L0005082\Documents\Input SAP\2020_ZPP_MD_STOCK.xlsx",
-                "2300":r"C:\Users\L0005082\Documents\Input SAP\2300_ZPP_MD_STOCK.xlsx",
-                "2040":r"C:\Users\L0005082\Documents\Input SAP\2040_ZPP_MD_STOCK.xlsx",
+                "2500":r"\\prfoufiler01\donnees$\Public\Input SAP\2500_ZPP_MD_STOCK.xlsx",
+                "2600":r"\\prfoufiler01\donnees$\Public\Input SAP\2600_ZPP_MD_STOCK.xlsx",
+                "2400":r"\\prfoufiler01\donnees$\Public\Input SAP\2400_ZPP_MD_STOCK.xlsx",
+                "2010":r"\\prfoufiler01\donnees$\Public\Input SAP\2010_ZPP_MD_STOCK.xlsx",
+                "2110":r"\\prfoufiler01\donnees$\Public\Input SAP\2110_ZPP_MD_STOCK.xlsx",
+                "2200":r"\\prfoufiler01\donnees$\Public\Input SAP\2200_ZPP_MD_STOCK.xlsx",
+                "2000":r"\\prfoufiler01\donnees$\Public\Input SAP\2000_ZPP_MD_STOCK.xlsx",
+                "2030":r"\\prfoufiler01\donnees$\Public\Input SAP\2030_ZPP_MD_STOCK.xlsx",
+                "2020":r"\\prfoufiler01\donnees$\Public\Input SAP\2020_ZPP_MD_STOCK.xlsx",
+                "2300":r"\\prfoufiler01\donnees$\Public\Input SAP\2300_ZPP_MD_STOCK.xlsx",
+                "2040":r"\\prfoufiler01\donnees$\Public\Input SAP\2040_ZPP_MD_STOCK.xlsx",
             }
-
             #User name
             uploded_by =1
             #Date time for upload files
@@ -74,19 +77,39 @@ def uploaded_files(request):
             #week
             week=datetime.now().strftime("%W")
             #control statment to check if files exists    
-            if (file_mb52.exists()   and  file_se16ncepc.exists() and file_se16nt001l.exists() and file_se16nt024.exists() and file_zmm.exists() and file_st.exists() and file_art.exists() and file_md.exists()):
-                import_file_SE16N_T001L(conn,file_se16nt001l,year,week,uploded_by,uploded_at)
-                import_file_MB52(conn,file_mb52,year,week,uploded_by,uploded_at)
-                import_file_SE16N_CEPC(conn,file_se16ncepc,year,week,uploded_by,uploded_at)
-                import_file_SE16N_T024(conn,file_se16nt024,year,week,uploded_by,uploded_at)
-                import_file_ART_MARA_MARC(conn,file_art,year,week,uploded_by,uploded_at)
-                import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,year,week,uploded_by,uploded_at)
-                import_file_Stock_transit(conn,file_st,year,week,uploded_by,uploded_at)
-                import_file_MDMA(conn,file_md,year,week,uploded_by,uploded_at)
-                for division,file in zpp_md_stock.items():
-                    import_file_ZPP_MD_Stock(conn,division,file,year,week,uploded_by,uploded_at)
-            else:
-                messages.error(request, 'Files not found')
+            if (file_mb52.exists() == False):
+                return messages.error(request, 'Files MB_52 not found')
+            if(file_se16ncepc.exists()== False):
+                return messages.error(request, 'Files MB_52 not found')
+
+            if(file_se16nt001l.exists()== False):
+                return messages.error(request, 'Files se16nt001l not found')
+                
+            if(file_se16nt024.exists()== False):
+                return messages.error(request, 'Files se16nt024 not found')
+
+            if(file_zmm.exists()== False):
+                return messages.error(request, 'Files ZMM not found')
+
+            if(file_st.exists()== False):
+                return messages.error(request, 'Files Stock Transit not found')
+
+            if(file_art.exists()== False):
+                return messages.error(request, 'Files ART_MARA_MARC not found')
+            if(file_md.exists()== False):
+                return messages.error(request, 'Files MDMA not found')
+            import_file_SE16N_CEPC(conn,file_se16ncepc,year,week,uploded_by,uploded_at)
+            import_file_SE16N_T001L(conn,file_se16nt001l,year,week,uploded_by,uploded_at)
+            import_file_MB52(conn,file_mb52,year,week,uploded_by,uploded_at)
+            import_file_SE16N_T024(conn,file_se16nt024,year,week,uploded_by,uploded_at)
+            import_file_ART_MARA_MARC(conn,file_art,year,week,uploded_by,uploded_at)
+            import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,year,week,uploded_by,uploded_at)
+            import_file_Stock_transit(conn,file_st,year,week,uploded_by,uploded_at)
+            import_file_MDMA(conn,file_md,year,week,uploded_by,uploded_at)
+            for division,file in zpp_md_stock.items():
+                import_file_ZPP_MD_Stock(conn,division,file,year,week,uploded_by,uploded_at)
+            # else:
+            #     messages.error(request, 'Files not found')
         except OperationalError:
             messages.error(request,'Data base not found')
 
@@ -95,7 +118,7 @@ def import_file_MB52(con,file,year,week,username,uploaded_at):
     #Read file
     df = pd.read_excel(file,names=['material','division','store','store_level_deletion_indicator','unit','for_free_use','currency','value_free_use','transit_transfer','transit_transfer_value', 'in_quality_control','value_quality_control', 'non_free_stock','non_free_value', 'blocked','blocked_stock_value','returns','blocked_return_stock_value',]) # to read file excel
     #Filter where suppr_indicator is not X
-    df=df[df['suppr_indicator'] != 'X']
+    df=df[df['store_level_deletion_indicator'] != 'X']
     #insert 2 column year, week
     df.insert(0,'year',year,True)
     df.insert(1,'week',week,True)
@@ -341,8 +364,13 @@ def import_file_SE16N_T024(con,file,year,week,username,uploaded_at):
     con.commit() 
 #function for Import file ZMM_CARNET_CDE_IS
 def import_file_ZMM_CARNET_CDE_IS(con,file,year,week,username,uploaded_at):
-     #Read file
+    #Read file
     df = pd.read_excel(file,names=['request_no','division','store','purchase_document','poste1','due_date','vendor','vendor_name','material', 'designation_add_material','name','transmission_info','validated_by','priority', 'quantity','quantity_to_receive','date_of_purchase','desired_date','original_delivery_date','contractual_delivery_date', 'validated_delivery_date','confirmed_quantity','comment','expected_stock_week_w','expected_stock_week_w_1','expected_stock_week_w_2','expected_stock_week_w_3','expected_stock_week_w_4','expected_stock_week_w_5','expected_stock_week_w_6','expected_stock_week_w_7','expected_stock_week_w_8','expected_stock_week_w_9','expected_stock_week_w_10','expected_stock_week_w_11','expected_stock_week_w_12','confirmation','estimated_delivery_time','comment_vendor','element_otp','business_document','poste2','need_number','net_price','currency','price_basis','price_unit','net_order_value','purchasing_document_type','exception_message_number','exception_message','purchasing_group']) # to read file excel
+    df=df.replace(0, np.nan)
+    #Change negative value format from '200-' to '-200'
+    df['expected_stock_week_w']=np.where((~df['expected_stock_week_w'].str.contains('-', na=False)),df['expected_stock_week_w'],'-'+df['expected_stock_week_w'].str.removesuffix('-'))
+    for i in range(1,12):
+        df['expected_stock_week_w_'+str(i)]=np.where((~df['expected_stock_week_w_'+str(i)].str.contains('-', na=False)),df['expected_stock_week_w_'+str(i)],'-'+df['expected_stock_week_w_'+str(i)].str.removesuffix('-'))
     #insert 2 column year, week
     df.insert(0,'year',year,True)
     df.insert(1,'week',week,True)
@@ -354,8 +382,7 @@ def import_file_ZMM_CARNET_CDE_IS(con,file,year,week,username,uploaded_at):
     # df['Division']=df['Division'].astype(int)
     df['store']=df['store'].fillna(0)
     df['store']=df['store'].astype(int)
-     
-    print(df)
+
     df=df.to_csv(index=False,header=None,sep='|') #To convert to csv
     
     zmm=StringIO()
@@ -791,7 +818,7 @@ def core(request):#show list of core
         data=Core.undeleted_objects.all().exclude(Q(status='Close') | Q(status='Refuse')).order_by('-id')
     return render(request,r'shortage\core.html',{'data':data,'filter':filter})
 
-@allowed_users(allowed_roles=['users','administrators'])
+# @allowed_users(allowed_roles=['users','administrators'])
 def create_core(request):#create new core
     if  (request.method == 'POST') :
         material=request.POST['material']
@@ -815,7 +842,7 @@ def create_core(request):#create new core
 
     return render(request,'shortage\create_core.html',{'myform' : Myform})
 
-@allowed_users(allowed_roles=['administrators'])
+# @allowed_users(allowed_roles=['administrators'])
 def update_core(request,pk): #function for update core
     core=Core.objects.get(id=pk)
     myform=Myform(instance=core)
@@ -838,7 +865,7 @@ def update_core(request,pk): #function for update core
                 messages.error(request, 'Invalid form submission.') 
     return render(request,'shortage/updateForm.html',{'core' : core,'myform' : myform})
 
-@allowed_users(allowed_roles=['administrators'])
+# @allowed_users(allowed_roles=['administrators'])
 def delete_core(request,pk): #function soft-delete
     core=Core.objects.get(id=pk)
     core.deleted=True
