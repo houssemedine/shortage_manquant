@@ -38,7 +38,9 @@ def upload(request):
     ZPP_MD_Stock.objects.all().delete()
     uploaded_files(request)  #call function to upload files
     return redirect ('files_list')
-
+    # file=r'\\centaure\Extract_SAP\140-COGI\COGI_202223.XLSX'
+    # df=pd.read_excel(file)
+    # return HttpResponse(df)
 
 #Upload Files and check if exist   
 def uploaded_files(request):
@@ -281,7 +283,6 @@ def import_file_SE16N_T001L(con,file,year,week,username,uploaded_at):
     df.insert(2,'uploaded_by',username,True)
     df.insert(3,'uploaded_at',uploaded_at,True)
     #insert 2 column created by, created at
-    print(df)
     df=df.to_csv(index=False,header=None) #To convert to csv
         
     se=StringIO()
@@ -325,7 +326,7 @@ def import_file_SE16N_T001L(con,file,year,week,username,uploaded_at):
     con.commit()
 #function for Import file SE16N_T024
 def import_file_SE16N_T024(con,file,year,week,username,uploaded_at):
-      #Read file
+    #Read file
     df = pd.read_excel(file,names=['purchasing_group', 'description_p_group', 'tel_no_purch_group',  'output_device', 'fax_number','telephone', 'extension', 'e_mail_address', 'user_name' ]) # to read file excel
     #insert 2 column year, week
     df.insert(0,'year',year,True)
@@ -333,9 +334,8 @@ def import_file_SE16N_T024(con,file,year,week,username,uploaded_at):
     #insert 2 column created by, created at
     df.insert(2,'uploaded_by',username,True)
     df.insert(3,'uploaded_at',uploaded_at,True)
-    print(df)
-    df=df.to_csv(index=False,header=None) #To convert to csv
-    
+
+    df=df.to_csv(index=False,header=None) #To convert to csv    
     SE24=StringIO()
     SE24.write(df)
     SE24.seek(0)
@@ -541,8 +541,7 @@ def import_file_Stock_transit(con,file,year,week,username,uploaded_at):
     #insert 2 column created by, created at
     df.insert(2,'uploaded_by',username,True)
     df.insert(3,'uploaded_at',uploaded_at,True)
-     
-    print(df)
+
     df=df.to_csv(index=False,header=None) #To convert to csv
     
     ST=StringIO()
