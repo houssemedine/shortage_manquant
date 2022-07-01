@@ -67,6 +67,7 @@
                                       <th scope="col">Purchase group designation</th>
                                       <th scope="col">Scope Allocation</th>
                                       <th scope="col">Allocated Supplier</th>
+                                      <th scope="col">Security Stock</th>
                                       <th scope="col">Core Id</th>
                                       <th scope="col">Core Status</th>
                                       <th scope="col">Missig Status</th>
@@ -82,7 +83,7 @@
                                           data-tyar='{{data.tyar}}'
                                           data-mp='{{data.mp}}'
                                           data-a_s='{{data.a_s}}'
-                                          data-typ='{{data.typ}}'
+                                          data-planification_type='{{data.planification_type}}'
                                           data-mrp_element='{{data.mrp_element}}'
                                           data-delivery_qty='{{data.delivery_qty}}'
                                           data-num_parcel='{{data.num_parcel}}'
@@ -107,7 +108,8 @@
                                           <td>{{data.profit_center_designation}}</td>
                                           <td>{{data.purchasing_group_designation}}</td>
                                           <td>{{data.scope_allocation}}</td>
-                                          <td>{{data.vendor}}</td>
+                                          <td>{{data.allocated_supplier}}</td>
+                                          <td>{{data.security_stock}}</td>
                                           <td>{{data.id_core}}</td>
                                           <td>{{data.status_core}}</td>
                                           <td>{{data.missing_status}}</td>  
@@ -188,7 +190,7 @@
       var tyar = $(event.relatedTarget).data('tyar');
       var mp = $(event.relatedTarget).data('mp');
       var a_s = $(event.relatedTarget).data('a_s');
-      var typ = $(event.relatedTarget).data('typ');
+      var planification_type = $(event.relatedTarget).data('planification_type');
       var mrp_element = $(event.relatedTarget).data('mrp_element');
       var delivery_qty = $(event.relatedTarget).data('delivery_qty');
       var num_parcel  = $(event.relatedTarget).data('num_parcel'); 
@@ -202,7 +204,7 @@
       {% comment %} var validated_delivery_date  = $(event.relatedTarget).data('validated_delivery_date'); {% endcomment %}
       {% comment %} var confirmed_quantity  = $(event.relatedTarget).data('confirmed_quantity '); {% endcomment %}
       {% comment %} var vendor_name  = $(event.relatedTarget).data('vendor_name '); {% endcomment %}
-      document.getElementById("datatable").innerHTML="<td>"+dpr+"</td><td>"+tyar+"</td><td>"+mp+"</td><td>"+a_s+"</td><td>"+typ+"</td><td>"+mrp_element+"</td><td>"+delivery_qty+"</td><td>"+num_parcel+"</td><td>"+warehouse_stock+"</td><td>"+workshop_stock+"</td><td>"+stock_zpush+"</td><td>"+stock_quality+"</td><td>"+other_stocks+"</td>";
+      document.getElementById("datatable").innerHTML="<td>"+dpr+"</td><td>"+tyar+"</td><td>"+mp+"</td><td>"+a_s+"</td><td>"+planification_type+"</td><td>"+mrp_element+"</td><td>"+delivery_qty+"</td><td>"+num_parcel+"</td><td>"+warehouse_stock+"</td><td>"+workshop_stock+"</td><td>"+stock_zpush+"</td><td>"+stock_quality+"</td><td>"+other_stocks+"</td>";
       
     });
   

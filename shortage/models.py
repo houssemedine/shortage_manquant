@@ -321,6 +321,7 @@ class ART_MARA_MARC(models.Model): #Model For File ART_MARA_MARC
     uq8= models.CharField(max_length=30,null=True)#UQ
     district = models.CharField(max_length=30,null=True)  #col from CEPC
     profit_center_designation =models.CharField(max_length=100,null=True)#col from CEPC
+    # purchasing_group =models.CharField(max_length=100,null=True)#col from T024
     purchasing_group_designation=models.CharField(max_length=20,null=True)# Col from T024
 
 

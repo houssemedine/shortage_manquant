@@ -36,6 +36,8 @@ def upload(request):
     MDMA.objects.all().delete()
     ART_MARA_MARC.objects.all().delete()
     ZPP_MD_Stock.objects.all().delete()
+    Z_SC_M_0002.objects.all().delete()
+    Z_SC_P_0004.objects.all().delete()
     uploaded_files(request)  #call function to upload files
     return redirect ('files_list')
     # file=r'\\centaure\Extract_SAP\140-COGI\COGI_202223.XLSX'
@@ -45,75 +47,80 @@ def upload(request):
 #Upload Files and check if exist   
 def uploaded_files(request):
     #connection to DB 
-        # file=urllib.request.urlopen('http://sp-is.lat.corp/Pages/Default.aspx')
-        # readfile=pd.read_excel(file)
-        try:
-            conn= psycopg2.connect(host='localhost', dbname='shortage_db', user='postgres', password='054Ibiza',port='5432') 
-            file_mb52=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\MB52 ALL.xlsx')
-            file_se16ncepc=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\cepc.xlsx')
-            file_se16nt001l=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\T001l.xlsx')
-            file_se16nt024=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\T024.xlsx')
-            file_zmm=pathlib.Path( r'\\prfoufiler01\donnees$\Public\Input SAP\ZMM_CARNT_CDE_20220510_PRD.xlsx')
-            file_st=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\Transit.xlsx')
-            file_art=pathlib.Path( r'\\prfoufiler01\donnees$\Public\Input SAP\ART_MARA_MARC_GLOBAL_202219.xlsx')
-            file_md=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\MDMA.xlsx')
-            zpp_md_stock={
-                "2500":r"\\prfoufiler01\donnees$\Public\Input SAP\2500_ZPP_MD_STOCK.xlsx",
-                "2600":r"\\prfoufiler01\donnees$\Public\Input SAP\2600_ZPP_MD_STOCK.xlsx",
-                "2400":r"\\prfoufiler01\donnees$\Public\Input SAP\2400_ZPP_MD_STOCK.xlsx",
-                "2010":r"\\prfoufiler01\donnees$\Public\Input SAP\2010_ZPP_MD_STOCK.xlsx",
-                "2110":r"\\prfoufiler01\donnees$\Public\Input SAP\2110_ZPP_MD_STOCK.xlsx",
-                "2200":r"\\prfoufiler01\donnees$\Public\Input SAP\2200_ZPP_MD_STOCK.xlsx",
-                "2000":r"\\prfoufiler01\donnees$\Public\Input SAP\2000_ZPP_MD_STOCK.xlsx",
-                "2030":r"\\prfoufiler01\donnees$\Public\Input SAP\2030_ZPP_MD_STOCK.xlsx",
-                "2020":r"\\prfoufiler01\donnees$\Public\Input SAP\2020_ZPP_MD_STOCK.xlsx",
-                "2300":r"\\prfoufiler01\donnees$\Public\Input SAP\2300_ZPP_MD_STOCK.xlsx",
-                "2040":r"\\prfoufiler01\donnees$\Public\Input SAP\2040_ZPP_MD_STOCK.xlsx",
-            }
-            #User name
-            uploded_by =1
-            #Date time for upload files
-            uploded_at = datetime.now()
-            #year
-            year=datetime.now().year
-            #week
-            week=datetime.now().strftime("%W")
-            #control statment to check if files exists    
-            if (file_mb52.exists() == False):
-                return messages.error(request, 'Files MB_52 not found')
-            if(file_se16ncepc.exists()== False):
-                return messages.error(request, 'Files MB_52 not found')
+    try:
+        conn= psycopg2.connect(host='localhost', dbname='shortage_db', user='postgres', password='054Ibiza',port='5432') 
+        file_mb52=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\MB52 ALL.xlsx')
+        file_se16ncepc=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\cepc.xlsx')
+        file_se16nt001l=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\T001l.xlsx')
+        file_se16nt024=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\T024.xlsx')
+        file_zmm=pathlib.Path( r'\\prfoufiler01\donnees$\Public\Input SAP\ZMM_CARNT_CDE_20220510_PRD.xlsx')
+        file_st=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\Transit.xlsx')
+        file_art=pathlib.Path( r'\\prfoufiler01\donnees$\Public\Input SAP\ART_MARA_MARC_GLOBAL_202219.xlsx')
+        file_md=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\MDMA.xlsx')
+        file_zscm=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\Z_SC_M_0002.xlsx')
+        file_zscp=pathlib.Path(r'\\prfoufiler01\donnees$\Public\Input SAP\Z_SC_P_00004.xlsx')
+        zpp_md_stock={
+            "2500":r"\\prfoufiler01\donnees$\Public\Input SAP\2500_ZPP_MD_STOCK.xlsx",
+            "2600":r"\\prfoufiler01\donnees$\Public\Input SAP\2600_ZPP_MD_STOCK.xlsx",
+            "2400":r"\\prfoufiler01\donnees$\Public\Input SAP\2400_ZPP_MD_STOCK.xlsx",
+            "2010":r"\\prfoufiler01\donnees$\Public\Input SAP\2010_ZPP_MD_STOCK.xlsx",
+            "2110":r"\\prfoufiler01\donnees$\Public\Input SAP\2110_ZPP_MD_STOCK.xlsx",
+            "2200":r"\\prfoufiler01\donnees$\Public\Input SAP\2200_ZPP_MD_STOCK.xlsx",
+            "2000":r"\\prfoufiler01\donnees$\Public\Input SAP\2000_ZPP_MD_STOCK.xlsx",
+            "2030":r"\\prfoufiler01\donnees$\Public\Input SAP\2030_ZPP_MD_STOCK.xlsx",
+            "2020":r"\\prfoufiler01\donnees$\Public\Input SAP\2020_ZPP_MD_STOCK.xlsx",
+            "2300":r"\\prfoufiler01\donnees$\Public\Input SAP\2300_ZPP_MD_STOCK.xlsx",
+            "2040":r"\\prfoufiler01\donnees$\Public\Input SAP\2040_ZPP_MD_STOCK.xlsx",
+        }
+        #User name
+        uploded_by =1
+        #Date time for upload files
+        uploded_at = datetime.now()
+        #year
+        year=datetime.now().year
+        #week
+        week=datetime.now().strftime("%W")
+        #control statment to check if files exists    
+        if (file_mb52.exists() == False):
+            return messages.error(request, 'Files MB_52 not found')
+        if(file_se16ncepc.exists()== False):
+            return messages.error(request, 'Files MB_52 not found')
 
-            if(file_se16nt001l.exists()== False):
-                return messages.error(request, 'Files se16nt001l not found')
-                
-            if(file_se16nt024.exists()== False):
-                return messages.error(request, 'Files se16nt024 not found')
+        if(file_se16nt001l.exists()== False):
+            return messages.error(request, 'Files se16nt001l not found')
+            
+        if(file_se16nt024.exists()== False):
+            return messages.error(request, 'Files se16nt024 not found')
 
-            if(file_zmm.exists()== False):
-                return messages.error(request, 'Files ZMM not found')
+        if(file_zmm.exists()== False):
+            return messages.error(request, 'Files ZMM not found')
 
-            if(file_st.exists()== False):
-                return messages.error(request, 'Files Stock Transit not found')
+        if(file_st.exists()== False):
+            return messages.error(request, 'Files Stock Transit not found')
 
-            if(file_art.exists()== False):
-                return messages.error(request, 'Files ART_MARA_MARC not found')
-            if(file_md.exists()== False):
-                return messages.error(request, 'Files MDMA not found')
-            import_file_SE16N_CEPC(conn,file_se16ncepc,year,week,uploded_by,uploded_at)
-            import_file_SE16N_T001L(conn,file_se16nt001l,year,week,uploded_by,uploded_at)
-            import_file_MB52(conn,file_mb52,year,week,uploded_by,uploded_at)
-            import_file_SE16N_T024(conn,file_se16nt024,year,week,uploded_by,uploded_at)
-            import_file_ART_MARA_MARC(conn,file_art,year,week,uploded_by,uploded_at)
-            import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,year,week,uploded_by,uploded_at)
-            import_file_Stock_transit(conn,file_st,year,week,uploded_by,uploded_at)
-            import_file_MDMA(conn,file_md,year,week,uploded_by,uploded_at)
-            for division,file in zpp_md_stock.items():
-                import_file_ZPP_MD_Stock(conn,division,file,year,week,uploded_by,uploded_at)
-            # else:
-            #     messages.error(request, 'Files not found')
-        except OperationalError:
-            messages.error(request,'Data base not found')
+        if(file_art.exists()== False):
+            return messages.error(request, 'Files ART_MARA_MARC not found')
+        if(file_md.exists()== False):
+            return messages.error(request, 'Files MDMA not found')
+        if(file_zscp.exists()== False):
+            return messages.error(request, 'Files ZSCP not found')
+        if(file_zscp.exists()== False):
+            return messages.error(request, 'Files ZSCM not found')
+        import_file_SE16N_CEPC(conn,file_se16ncepc,year,week,uploded_by,uploded_at)
+        import_file_SE16N_T001L(conn,file_se16nt001l,year,week,uploded_by,uploded_at)
+        import_file_MB52(conn,file_mb52,year,week,uploded_by,uploded_at)
+        import_file_SE16N_T024(conn,file_se16nt024,year,week,uploded_by,uploded_at)
+        import_file_ART_MARA_MARC(conn,file_art,year,week,uploded_by,uploded_at)
+        import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,year,week,uploded_by,uploded_at)
+        import_file_Stock_transit(conn,file_st,year,week,uploded_by,uploded_at)
+        import_file_MDMA(conn,file_md,year,week,uploded_by,uploded_at)
+        import_Z_SC_P_0004(conn,file_zscp,year,week,uploded_by,uploded_at)
+        import_Z_SC_M_0002(conn,file_zscm,year,week,uploded_by,uploded_at)
+        for division,file in zpp_md_stock.items():
+            import_file_ZPP_MD_Stock(conn,division,file,year,week,uploded_by,uploded_at)
+
+    except OperationalError:
+        messages.error(request,'Data base not found')
 
 #function for import file MB52
 def import_file_MB52(con,file,year,week,username,uploaded_at):
@@ -807,6 +814,155 @@ def import_file_MDMA(con,file,year,week,username,uploaded_at):
         )
     con.commit()
 
+def import_Z_SC_P_0004(con,file,year,week,username,uploaded_at):
+    #Read file
+    df = pd.read_excel(file,names=['notice','vendor','supplier_account_number','created_on','created_by','system_status','division','gac','purchase_document','poste','material','num_material','reference','date','updated_by','updated_on']) # to read file excel
+    #insert 2 column year, week
+    df.insert(0,'year',year,True)
+    df.insert(1,'week',week,True)
+    #insert 2 column created by, created at
+    df.insert(2,'uploaded_by',username,True)
+    df.insert(3,'uploaded_at',uploaded_at,True)
+    print(df)
+    df=df.to_csv(index=False,sep=';',header=None) #To convert to csv
+    # print(df)
+    zscp=StringIO()
+    zscp.write(df)
+    zscp.seek(0)
+    with con.cursor() as curs:
+        curs.copy_from(
+            file=zscp,
+            table="shortage_z_sc_p_0004",
+            columns=[
+                'year',
+                'week',
+                'uploaded_by',
+                'uploaded_at',
+                'notice',
+                'vendor',
+                'supplier_account_number',
+                'created_on',
+                'created_by',
+                'system_status',
+                'division',
+                'gac',
+                'purchase_document',
+                'poste',
+                'material',
+                'num_material',
+                'reference',
+                'date',
+                'updated_on',
+                'updated_by',
+                ],
+            null='',
+            sep=';'
+        )
+    con.commit()
+
+def import_Z_SC_M_0002(con,file,year,week,username,uploaded_at):
+       #Read file
+    df = pd.read_excel(file,names=['material','num_material','division','orga','tyar','sa','a_s','fra','vendor','name1','contract','post','purchase_info','uq1','gest1','val_arrondie','uq2','orig','gac1','tps_de_recep','dpl','uac1','px_busgt_cours','dev1','pbudg_prec','dev2','futur_budget_price','dev3','par1','cival','por','sgf','num_material_fourn','gac2','dpr1','net_price','dev4','par2','inctm','incpterms','qte_standard','uac2','qte_min','uac3','name2','uac4','corr','post_type','target_qte','uac5','gac3','price_net','dev5','dev6','par3','i','num_material_fourn','tre','tps_fab_ext','inctm_contract','inctm_contract2','gac4','dev7','inctm2','incoterms2','grpi1','abc','planning_unit','gest2','a_s2','dpr2','grpi2','apsc','num_tarif_dnr',]) # to read file excel
+    #insert 2 column year, week
+    df.insert(0,'year',year,True)
+    df.insert(1,'week',week,True)
+    #insert 2 column created by, created at
+    df.insert(2,'uploaded_by',username,True)
+    df.insert(3,'uploaded_at',uploaded_at,True)
+    print(df)
+    df=df.to_csv(index=False,sep=';',header=None) #To convert to csv
+    # print(df)
+    zscm=StringIO()
+    zscm.write(df)
+    zscm.seek(0)
+    with con.cursor() as curs:
+        curs.copy_from(
+            file=zscm,
+            table="shortage_z_sc_m_0002",
+            columns=[
+                'year',
+                'week',
+                'uploaded_by',
+                'uploaded_at',
+                'material',
+                'num_material',
+                'division',
+                'orga',
+                'tyar',
+                'sa',
+                'a_s1',
+                'fra',
+                'vendor',
+                'name1',
+                'contract',
+                'post',
+                'purchase_info',
+                'uq1',
+                'gest1',
+                'val_arrondie',
+                'uq2',
+                'orig',
+                'gac1',
+                'tps_de_recep',
+                'dpl',
+                'uac1',
+                'px_busgt_cours',
+                'dev1',
+                'pbudg_prec',
+                'dev2',
+                'futur_budget_price',
+                'dev3',
+                'par1',
+                'cival',
+                'por',
+                'sgf',
+                'num_material_fourn1',
+                'gac2',
+                'dpr1',
+                'net_price',
+                'dev4',
+                'par2',
+                'inctm',
+                'incpterms',
+                'qte_standard',
+                'uac2',
+                'qte_min',
+                'uac3',
+                'name2',
+                'uac4',
+                'corr',
+                'post_type',
+                'target_qte',
+                'uac5',
+                'gac3',
+                'price_net',
+                'dev5',
+                'dev6',
+                'par3',
+                'i',
+                'num_material_fourn2',
+                'tre',
+                'tps_fab_ext',
+                'inctm_contract',
+                'inctm_contract2',
+                'gac4',
+                'dev7',
+                'inctm2',
+                'incoterms2',
+                'grpi1',
+                'abc',
+                'planning_unit',
+                'gest2',
+                'a_s2',
+                'dpr2',
+                'grpi2',
+                'apsc',
+                'num_tarif_dnr',
+                ],
+            null='',
+            sep=';'
+        )
+    con.commit()
 #CRUD CORE
 def core(request):#show list of core 
     filter=""
@@ -907,11 +1063,16 @@ def overview(request):
     #Call all files
     data_zpp=ZPP_MD_Stock.objects.values('year','week','year_week','material','Input_need','division')
     data_mb52=MB52.objects.values('year','week','value_free_use','material','division','stock_type')
-    data_mdma=MDMA.objects.values('year','week','forecast_delivery_time','planning_unit','material','division')
-    data_mara_marc=ART_MARA_MARC.objects.values('year','week','tyar','mp','gac','a_s','typ','ctrpr','dpr','material','division','scope_allocation','district','profit_center_designation','purchasing_group_designation')
+    data_mdma=MDMA.objects.values('year','week','forecast_delivery_time','planning_unit','material','division','manager','planning_type')
+    data_mara_marc=ART_MARA_MARC.objects.values('year','week','tyar','mp','gac','a_s','typ','ctrpr','dpr','material','division','scope_allocation','district','profit_center_designation','purchasing_group_designation','security_stock')
     data_core=Core.undeleted_objects.values('id','material','division','status','created_by')
     data_zmm=ZMM_CARNET_CDE_IS.objects.values('week','year','material','division','purchase_document','purchasing_group','validated_delivery_date','confirmed_quantity','vendor_name','poste1')
     data_st=Stock_transit.objects.values('year','week','num_parcel','delivery_qty','material','division')
+    data_zcm0002=Z_SC_M_0002.objects.values('year','week','material','division','vendor','name1')
+    data_t024=SE16N_T024.objects.values('year','week','purchasing_group','description_p_group')
+    df_t024=pd.DataFrame(list(data_t024))
+
+
     #Convert to dataFrame
     df_zpp=pd.DataFrame(list(data_zpp))
     df_st=pd.DataFrame(list(data_st))
@@ -920,6 +1081,7 @@ def overview(request):
     df_zmm=pd.DataFrame(list(data_zmm))
     df_mara_marc=pd.DataFrame(list(data_mara_marc))
     df_mdma=pd.DataFrame(list(data_mdma))
+    df_zcm0002=pd.DataFrame(list(data_zcm0002))
     df_zpp['Input_need']=df_zpp['Input_need'].astype(np.float64)
     ##############################
     # Zpp Pivot table 
@@ -937,6 +1099,13 @@ def overview(request):
     # #Get data from dict using map
     df_zpp['num_parcel']=df_zpp['key'].map(df_st_dict_num_parcel)
     df_zpp['delivery_qty']=df_zpp['key'].map(df_st_dict_delivery_qty)
+    ##############################
+    # ZPP and  Z_C_M_0002
+    ##############################
+    df_zcm0002['key']=df_zcm0002['year'].astype(str)+df_zcm0002['week'].astype(str)+df_zcm0002['material'].astype(str)+df_zcm0002['division'].astype(str)
+    df_zcm0002['allocated_supplier']=df_zcm0002['vendor'].astype(str)+'-'+df_zcm0002['name1'].astype(str)
+    df_zcm0002_dict_allocated_supplier=dict(zip(df_zcm0002.key,df_zcm0002.allocated_supplier))
+    df_zpp['allocated_supplier']=df_zpp['key'].map(df_zcm0002_dict_allocated_supplier)
     #Delete Key 
     del df_zpp['key']
     #############################
@@ -1038,11 +1207,17 @@ def overview(request):
     df_mara_marc['mrp_area']=np.where( ((df_mara_marc['a_s'] == '5A') | (df_mara_marc['a_s'] == '5B')) & (df_mara_marc['division'].astype(str)=='2400') ,'2000-2092',df_mara_marc['mrp_area'])
     df_mara_marc['mrp_area']=np.where( ((df_mara_marc['a_s'] == '5A') | (df_mara_marc['a_s'] == '5B')) & (df_mara_marc['division'].astype(str)=='2500') ,'2000-FTWZ',df_mara_marc['mrp_area'])
 
-
+    df_mdma['key']=df_mdma['year'].astype(str)+df_mdma['week'].astype(str)+df_mdma['material'].astype(str)+df_mdma['planning_unit'].astype(str)
+    df_mdma_dict_manager=dict(zip(df_mdma.key,df_mdma['manager']))
+    df_mdma_dict_planning_type=dict(zip(df_mdma.key,df_mdma['planning_type']))
     # #ZPP and  MARA MARC
     # ##############################
     #Key MARA MARC
     df_mara_marc['key']=df_mara_marc['year'].astype(str)+df_mara_marc['week'].astype(str)+df_mara_marc['material'].astype(str)+df_mara_marc['division'].astype(str)
+    #Key SE16N_T024
+    df_t024['key']=df_t024['year'].astype(str)+df_t024['week'].astype(str)+df_t024['purchasing_group'].astype(str)
+    #Convert to Dict
+    df_t024_dict=dict(zip(df_t024.key,df_t024.description_p_group))   
     #Key ZPP
     df_zpp['key']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['material'].astype(str)+df_zpp['division'].astype(str)
     # #Convert to Dict
@@ -1052,17 +1227,31 @@ def overview(request):
     df_mara_marc_dict_a_s=dict(zip(df_mara_marc.key,df_mara_marc.a_s))
     df_mara_marc_dict_typ=dict(zip(df_mara_marc.key,df_mara_marc.typ))
     df_mara_marc_dict_purchasing_group_designation=dict(zip(df_mara_marc.key,df_mara_marc.purchasing_group_designation))
+    df_mara_marc_dict_purchasing_group=dict(zip(df_mara_marc.key,df_mara_marc.gac))
     df_mara_marc_dict_mrp_area=dict(zip(df_mara_marc.key,df_mara_marc.mrp_area))
     df_mara_marc_dict_scope_allocation=dict(zip(df_mara_marc.key,df_mara_marc.scope_allocation))
     df_mara_marc_dict_dpr=dict(zip(df_mara_marc.key,df_mara_marc.dpr))
+    df_mara_marc_dict_security_stock=dict(zip(df_mara_marc.key,df_mara_marc.security_stock))
     # # #Get data from dict using map
+    df_zpp['security_stock']=df_zpp['key'].map(df_mara_marc_dict_security_stock)
     df_zpp['tyar']=df_zpp['key'].map(df_mara_marc_dict_tyar)
     df_zpp['mp']=df_zpp['key'].map(df_mara_marc_dict_mp)
     df_zpp['profit_center_designation']=df_zpp['key'].map(df_mara_marc_dict_profit_center_designation)
     df_zpp['a_s']=df_zpp['key'].map(df_mara_marc_dict_a_s)
-    df_zpp['typ']=df_zpp['key'].map(df_mara_marc_dict_typ)
-    df_zpp['purchasing_group_designation']=df_zpp['key'].map(df_mara_marc_dict_purchasing_group_designation)
+
     df_zpp['mrp_area']=df_zpp['key'].map(df_mara_marc_dict_mrp_area)
+    #purchasing_group_designation
+    df_zpp['key_mrp_area']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['material'].astype(str)+df_zpp['mrp_area'].astype(str)
+    # df_zpp['purchasing_group_designation']=np.where((df_zpp['mrp_area'].isna()),((df_zpp['key'].map(df_mara_marc_dict_purchasing_group_designation).astype(str))),(df_zpp['key_mrp_area'].map(df_mdma_dict_manager)))
+    df_zpp['purchasing_group_designation']=np.where((df_zpp['mrp_area'].isna()),((df_zpp['key'].map(df_mara_marc_dict_purchasing_group_designation).astype(str))+'-'+(df_zpp['key'].map(df_mara_marc_dict_purchasing_group).astype(str))),(df_zpp['key_mrp_area'].map(df_mdma_dict_manager)))
+    df_zpp['key_purchasing_group_designation']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['purchasing_group_designation'].astype(str)
+    df_zpp['purchasing_group_designation']=np.where((df_zpp['mrp_area'].isna()),(df_zpp['purchasing_group_designation']),(df_zpp['key_purchasing_group_designation'].map(df_t024_dict)).astype(str)+'-'+df_zpp['purchasing_group_designation'])
+
+    #Planification type
+    df_zpp['planification_type']=np.where((df_zpp['mrp_area'].isna()),(df_zpp['key'].map(df_mara_marc_dict_typ)),(df_zpp['key_mrp_area'].map(df_mdma_dict_planning_type)))
+    
+    
+    
     df_zpp['scope_allocation']=df_zpp['key'].map(df_mara_marc_dict_scope_allocation)
     df_zpp['dpr']=df_zpp['key'].map(df_mara_marc_dict_dpr)
     # del df_zpp['key']
