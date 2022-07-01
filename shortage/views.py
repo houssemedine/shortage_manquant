@@ -1236,7 +1236,15 @@ def overview(request):
     df_zpp['security_stock']=df_zpp['key'].map(df_mara_marc_dict_security_stock)
     df_zpp['tyar']=df_zpp['key'].map(df_mara_marc_dict_tyar)
     df_zpp['mp']=df_zpp['key'].map(df_mara_marc_dict_mp)
+
     df_zpp['profit_center_designation']=df_zpp['key'].map(df_mara_marc_dict_profit_center_designation)
+    # df_mara_marc['key_profit_center_designation']=df_mara_marc['year'].astype(str)+df_mara_marc['week'].astype(str)+df_mara_marc['material'].astype(str)+df_mara_marc['division'].astype(str)
+    df_mara_marc_dict_ctrpr=dict(zip(df_mara_marc.key,df_mara_marc.ctrpr))
+    # df_zpp['key_profit_center_designation']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['material'].astype(str)+df_mara_marc['division'].astype(str)
+    # df_zpp['profit_center_designation']=df_zpp['key_profit_center_designation'].map(df_mara_marc_dict_ctrpr)+'-'+df_zpp['profit_center_designation']
+    df_zpp['profit_center_designation']=df_zpp['key'].map(df_mara_marc_dict_ctrpr)+'-'+df_zpp['profit_center_designation']
+
+    
     df_zpp['a_s']=df_zpp['key'].map(df_mara_marc_dict_a_s)
 
     df_zpp['mrp_area']=df_zpp['key'].map(df_mara_marc_dict_mrp_area)
