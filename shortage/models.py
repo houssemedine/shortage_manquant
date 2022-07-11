@@ -199,7 +199,7 @@ class ZPP_MD_Stock(models.Model): #Model For File ZPP_MD_Stock
     division = models.IntegerField(null=True) #Division
     material = models.CharField(max_length=30,null=True) #article	
     plan_date=models.DateTimeField(null=True)#Dates 
-    # mrp_element = models.CharField(max_length=30,null=True)#Elément MRP
+    mrp_element = models.CharField(max_length=30,null=True)#Elément MRP
     # data_for_planning_element= models.CharField(max_length=30,null=True)#Données pr élément planif
     # action_message= models.CharField(max_length=30,null=True)#Message d'action
     Input_need=models.CharField(max_length=30,null=True)#Entrée / besoin

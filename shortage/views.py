@@ -27,17 +27,17 @@ from shortage.models import *
 
 def upload(request):
     # Delete all data before upload
-    MB52.objects.all().delete()
-    SE16N_CEPC.objects.all().delete()
-    SE16N_T001L.objects.all().delete()
-    SE16N_T024.objects.all().delete()
-    ZMM_CARNET_CDE_IS.objects.all().delete()
-    Stock_transit.objects.all().delete()
-    MDMA.objects.all().delete()
-    ART_MARA_MARC.objects.all().delete()
+    # MB52.objects.all().delete()
+    # SE16N_CEPC.objects.all().delete()
+    # SE16N_T001L.objects.all().delete()
+    # SE16N_T024.objects.all().delete()
+    # ZMM_CARNET_CDE_IS.objects.all().delete()
+    # Stock_transit.objects.all().delete()
+    # MDMA.objects.all().delete()
+    # ART_MARA_MARC.objects.all().delete()
     ZPP_MD_Stock.objects.all().delete()
-    Z_SC_M_0002.objects.all().delete()
-    Z_SC_P_0004.objects.all().delete()
+    # Z_SC_M_0002.objects.all().delete()
+    # Z_SC_P_0004.objects.all().delete()
     uploaded_files(request)  #call function to upload files
     return redirect ('files_list')
     # file=r'\\centaure\Extract_SAP\140-COGI\COGI_202223.XLSX'
@@ -106,16 +106,16 @@ def uploaded_files(request):
             return messages.error(request, 'Files ZSCP not found')
         if(file_zscp.exists()== False):
             return messages.error(request, 'Files ZSCM not found')
-        import_file_SE16N_CEPC(conn,file_se16ncepc,year,week,uploded_by,uploded_at)
-        import_file_SE16N_T001L(conn,file_se16nt001l,year,week,uploded_by,uploded_at)
-        import_file_MB52(conn,file_mb52,year,week,uploded_by,uploded_at)
-        import_file_SE16N_T024(conn,file_se16nt024,year,week,uploded_by,uploded_at)
-        import_file_ART_MARA_MARC(conn,file_art,year,week,uploded_by,uploded_at)
-        import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,year,week,uploded_by,uploded_at)
-        import_file_Stock_transit(conn,file_st,year,week,uploded_by,uploded_at)
-        import_file_MDMA(conn,file_md,year,week,uploded_by,uploded_at)
-        import_Z_SC_P_0004(conn,file_zscp,year,week,uploded_by,uploded_at)
-        import_Z_SC_M_0002(conn,file_zscm,year,week,uploded_by,uploded_at)
+        # import_file_SE16N_CEPC(conn,file_se16ncepc,year,week,uploded_by,uploded_at)
+        # import_file_SE16N_T001L(conn,file_se16nt001l,year,week,uploded_by,uploded_at)
+        # import_file_MB52(conn,file_mb52,year,week,uploded_by,uploded_at)
+        # import_file_SE16N_T024(conn,file_se16nt024,year,week,uploded_by,uploded_at)
+        # import_file_ART_MARA_MARC(conn,file_art,year,week,uploded_by,uploded_at)
+        # import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,year,week,uploded_by,uploded_at)
+        # import_file_Stock_transit(conn,file_st,year,week,uploded_by,uploded_at)
+        # import_file_MDMA(conn,file_md,year,week,uploded_by,uploded_at)
+        # import_Z_SC_P_0004(conn,file_zscp,year,week,uploded_by,uploded_at)
+        # import_Z_SC_M_0002(conn,file_zscm,year,week,uploded_by,uploded_at)
         for division,file in zpp_md_stock.items():
             import_file_ZPP_MD_Stock(conn,division,file,year,week,uploded_by,uploded_at)
 
@@ -488,7 +488,7 @@ def import_file_ZPP_MD_Stock(con,division,file,year,week,username,uploaded_at):
         df=df[(df['take_into_account_en'] =='Y') |  (df['take_into_account_fr'] =='Y')]
         del df['take_into_account_en'] 
         del df['take_into_account_fr'] 
-        del df['mrp_element'] 
+        # del df['mrp_element'] 
         del df['data_for_planning_element'] 
         del df['action_message'] 
         del df['available_quantity'] 
@@ -497,7 +497,7 @@ def import_file_ZPP_MD_Stock(con,division,file,year,week,username,uploaded_at):
         del df['customer']
         del df['week_number']
         del df['year_number']
-
+    print(df)
     # df=df.groupby(['year','week','material','division']).agg({'Input_need': 'sum','available_quantity': 'sum'}).reset_index()
 
     #Get History data for need past calculte 
@@ -531,6 +531,7 @@ def import_file_ZPP_MD_Stock(con,division,file,year,week,username,uploaded_at):
                 'division',
                 'material',
                 'plan_date',	
+                'mrp_element',	
                 'Input_need'
             ],
             null='',
@@ -1061,7 +1062,7 @@ def overview(request):
     week=9
 
     #Call all files
-    data_zpp=ZPP_MD_Stock.objects.values('year','week','year_week','material','Input_need','division')
+    data_zpp=ZPP_MD_Stock.objects.values('year','week','year_week','material','Input_need','division','mrp_element')
     data_mb52=MB52.objects.values('year','week','value_free_use','material','division','stock_type')
     data_mdma=MDMA.objects.values('year','week','forecast_delivery_time','planning_unit','material','division','manager','planning_type')
     data_mara_marc=ART_MARA_MARC.objects.values('year','week','tyar','mp','gac','a_s','typ','ctrpr','dpr','material','division','scope_allocation','district','profit_center_designation','purchasing_group_designation','security_stock')
@@ -1070,10 +1071,10 @@ def overview(request):
     data_st=Stock_transit.objects.values('year','week','num_parcel','delivery_qty','material','division')
     data_zcm0002=Z_SC_M_0002.objects.values('year','week','material','division','vendor','name1')
     data_t024=SE16N_T024.objects.values('year','week','purchasing_group','description_p_group')
-    df_t024=pd.DataFrame(list(data_t024))
 
 
     #Convert to dataFrame
+    df_t024=pd.DataFrame(list(data_t024))
     df_zpp=pd.DataFrame(list(data_zpp))
     df_st=pd.DataFrame(list(data_st))
     df_mb52=pd.DataFrame(list(data_mb52))
@@ -1084,9 +1085,21 @@ def overview(request):
     df_zcm0002=pd.DataFrame(list(data_zcm0002))
     df_zpp['Input_need']=df_zpp['Input_need'].astype(np.float64)
     ##############################
-    # Zpp Pivot table 
+    # Zpp Pivot table and Lot QM
     ##############################
-    df_zpp=df_zpp.pivot_table(index=['year','week','material','division'],columns='year_week',values='Input_need', aggfunc='sum').reset_index()
+    # calculate sum Lot QM before pivot ZPP
+    ##############################
+    df_zpp_lot_qm=df_zpp[df_zpp['mrp_element']=='Lot QM']
+    df_zpp_lot_qm=df_zpp_lot_qm.groupby(['year','week','material','division'])['Input_need'].sum().reset_index()
+    df_zpp_lot_qm['key']=df_zpp_lot_qm['year'].astype(str)+df_zpp_lot_qm['week'].astype(str)+df_zpp_lot_qm['material'].astype(str)+df_zpp_lot_qm['division'].astype(str)
+    df_zpp_lot_qm_dict=dict(zip(df_zpp_lot_qm['key'],df_zpp_lot_qm.Input_need))
+
+    df_zpp=df_zpp.pivot_table(index=['year','week','material','division'],columns=['year_week'],values='Input_need', aggfunc='sum').reset_index()
+    ##############################
+    # Lot QM
+    ##############################
+    df_zpp['key']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['material'].astype(str)+df_zpp['division'].astype(str)
+    df_zpp['lot_qm_sum']=df_zpp['key'].map(df_zpp_lot_qm_dict)
     ##############################
     # ZPP and  ST
     ##############################
@@ -1194,14 +1207,7 @@ def overview(request):
     df_zpp['po_supplier']=df_zpp['key'].map(df_zmm_dict_vendor_name)
     ##############################
     #MARA MARC and  MDMA
-    ##############################
-    #Key MARA MARC 
-    # df_mara_marc['key']=df_mara_marc['year'].astype(str)+df_mara_marc['week'].astype(str)+df_mara_marc['material'].astype(str)+df_mara_marc['division'].astype(str)
-    # #Key MDMA 
-    # df_mdma['key']=df_mdma['year'].astype(str)+df_mdma['week'].astype(str)+df_mdma['material'].astype(str)+df_mdma['division'].astype(str)
-    # #Convert to Dict
-    # df_mdma_dict_planning_unit=dict(zip(df_mdma.key,df_mdma.planning_unit)) 
-    
+    ##############################    
     df_mara_marc.insert(0,'mrp_area',None,True)
     df_mara_marc['mrp_area']=np.where( ((df_mara_marc['a_s'] == '5A') | (df_mara_marc['a_s'] == '5B')) & (df_mara_marc['division'].astype(str)=='2110') ,'2000-2091',df_mara_marc['mrp_area'])
     df_mara_marc['mrp_area']=np.where( ((df_mara_marc['a_s'] == '5A') | (df_mara_marc['a_s'] == '5B')) & (df_mara_marc['division'].astype(str)=='2400') ,'2000-2092',df_mara_marc['mrp_area'])

@@ -93,10 +93,8 @@
                                           data-stock_quality='{{data.stock_quality}}'
                                           data-other_stocks='{{data.other_stocks}}'
                                           data-ongoing_po='{{data.ongoing_po}}'
-                                          {% comment %} data-validated_delivery_date='{{data.validated_delivery_date}}'
-                                           {% endcomment %}
-                                          {% comment %} data-confirmed_quantity='{{data.confirmed_quantity}}' {% endcomment %}
-                                          {% comment %} data-vendor_name='{{data.vendor_name}}' {% endcomment %}
+                                          data-lot_qm='{{data.lot_qm_sum}}'
+                                          
                                           data-toggle="modal" data-target="#viewall">
                                             <i class="fa-regular fa-folder-open"></i>
                                           </button>
@@ -153,20 +151,6 @@
                         <th scope="col">Stock Quality</th>
                         <th scope="col">Other Stocks</th>             
                         <th scope="col">Ongoing PO</th>
-                        {% comment %} <th scope="col">Confirmed delivery date</th> {% endcomment %}
-                        {% comment %} <th scope="col">Quantity to receive</th> {% endcomment %}
-                        {% comment %} <th scope="col">Procurement agent</th> {% endcomment %}
-                        {% comment %} <th scope="col">PO Supplier</th> {% endcomment %}
-                        {% comment %} <th scope="col">Date of missing</th>
-                        <th scope="col">Missing status</th>
-                        <th scope="col">Action</th>
-                        <th scope="col">Comment</th>
-                        <th scope="col">Action Status</th>
-                        <th scope="col">Needs in the past</th>
-                        <th scope="col">Backlog PO Qty</th>
-                        <th scope="col">Coverage time</th>
-                        <th scope="col">Week</th>
-                        <th scope="col">Week+x</th> {% endcomment %}
                         </tr>
                     </thead>
                 <tbody >
@@ -199,12 +183,13 @@
       var stock_zpush  = $(event.relatedTarget).data('stock_zpush'); 
       var stock_quality  = $(event.relatedTarget).data('stock_quality'); 
       var other_stocks  = $(event.relatedTarget).data('other_stocks'); 
+      var lot_qm  = $(event.relatedTarget).data('lot_qm'); 
       
 
       {% comment %} var validated_delivery_date  = $(event.relatedTarget).data('validated_delivery_date'); {% endcomment %}
       {% comment %} var confirmed_quantity  = $(event.relatedTarget).data('confirmed_quantity '); {% endcomment %}
       {% comment %} var vendor_name  = $(event.relatedTarget).data('vendor_name '); {% endcomment %}
-      document.getElementById("datatable").innerHTML="<td>"+dpr+"</td><td>"+tyar+"</td><td>"+mp+"</td><td>"+a_s+"</td><td>"+planification_type+"</td><td>"+mrp_element+"</td><td>"+delivery_qty+"</td><td>"+num_parcel+"</td><td>"+warehouse_stock+"</td><td>"+workshop_stock+"</td><td>"+stock_zpush+"</td><td>"+stock_quality+"</td><td>"+other_stocks+"</td>";
+      document.getElementById("datatable").innerHTML="<td>"+dpr+"</td><td>"+tyar+"</td><td>"+mp+"</td><td>"+a_s+"</td><td>"+planification_type+"</td><td>"+lot_qm+"</td><td>"+mrp_element+"</td><td>"+delivery_qty+"</td><td>"+num_parcel+"</td><td>"+warehouse_stock+"</td><td>"+workshop_stock+"</td><td>"+stock_zpush+"</td><td>"+stock_quality+"</td><td>"+other_stocks+"</td>";
       
     });
   
