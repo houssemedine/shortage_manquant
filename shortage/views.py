@@ -1,7 +1,4 @@
 # Create your views here.
-from __future__ import division
-import imp
-from inspect import CO_ASYNC_GENERATOR
 from io import StringIO
 from turtle import st
 from unittest import result
@@ -27,17 +24,17 @@ from shortage.models import *
 
 def upload(request):
     # Delete all data before upload
-    # MB52.objects.all().delete()
-    # SE16N_CEPC.objects.all().delete()
-    # SE16N_T001L.objects.all().delete()
-    # SE16N_T024.objects.all().delete()
-    # ZMM_CARNET_CDE_IS.objects.all().delete()
-    # Stock_transit.objects.all().delete()
-    # MDMA.objects.all().delete()
-    # ART_MARA_MARC.objects.all().delete()
+    MB52.objects.all().delete()
+    SE16N_CEPC.objects.all().delete()
+    SE16N_T001L.objects.all().delete()
+    SE16N_T024.objects.all().delete()
+    ZMM_CARNET_CDE_IS.objects.all().delete()
+    Stock_transit.objects.all().delete()
+    MDMA.objects.all().delete()
+    ART_MARA_MARC.objects.all().delete()
     ZPP_MD_Stock.objects.all().delete()
-    # Z_SC_M_0002.objects.all().delete()
-    # Z_SC_P_0004.objects.all().delete()
+    Z_SC_M_0002.objects.all().delete()
+    Z_SC_P_0004.objects.all().delete()
     uploaded_files(request)  #call function to upload files
     return redirect ('files_list')
     # file=r'\\centaure\Extract_SAP\140-COGI\COGI_202223.XLSX'
@@ -106,16 +103,16 @@ def uploaded_files(request):
             return messages.error(request, 'Files ZSCP not found')
         if(file_zscp.exists()== False):
             return messages.error(request, 'Files ZSCM not found')
-        # import_file_SE16N_CEPC(conn,file_se16ncepc,year,week,uploded_by,uploded_at)
-        # import_file_SE16N_T001L(conn,file_se16nt001l,year,week,uploded_by,uploded_at)
-        # import_file_MB52(conn,file_mb52,year,week,uploded_by,uploded_at)
-        # import_file_SE16N_T024(conn,file_se16nt024,year,week,uploded_by,uploded_at)
-        # import_file_ART_MARA_MARC(conn,file_art,year,week,uploded_by,uploded_at)
-        # import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,year,week,uploded_by,uploded_at)
-        # import_file_Stock_transit(conn,file_st,year,week,uploded_by,uploded_at)
-        # import_file_MDMA(conn,file_md,year,week,uploded_by,uploded_at)
-        # import_Z_SC_P_0004(conn,file_zscp,year,week,uploded_by,uploded_at)
-        # import_Z_SC_M_0002(conn,file_zscm,year,week,uploded_by,uploded_at)
+        import_file_SE16N_CEPC(conn,file_se16ncepc,year,week,uploded_by,uploded_at)
+        import_file_SE16N_T001L(conn,file_se16nt001l,year,week,uploded_by,uploded_at)
+        import_file_MB52(conn,file_mb52,year,week,uploded_by,uploded_at)
+        import_file_SE16N_T024(conn,file_se16nt024,year,week,uploded_by,uploded_at)
+        import_file_ART_MARA_MARC(conn,file_art,year,week,uploded_by,uploded_at)
+        import_file_ZMM_CARNET_CDE_IS(conn,file_zmm,year,week,uploded_by,uploded_at)
+        import_file_Stock_transit(conn,file_st,year,week,uploded_by,uploded_at)
+        import_file_MDMA(conn,file_md,year,week,uploded_by,uploded_at)
+        import_Z_SC_P_0004(conn,file_zscp,year,week,uploded_by,uploded_at)
+        import_Z_SC_M_0002(conn,file_zscm,year,week,uploded_by,uploded_at)
         for division,file in zpp_md_stock.items():
             import_file_ZPP_MD_Stock(conn,division,file,year,week,uploded_by,uploded_at)
 
@@ -1071,10 +1068,12 @@ def overview(request):
     data_st=Stock_transit.objects.values('year','week','num_parcel','delivery_qty','material','division')
     data_zcm0002=Z_SC_M_0002.objects.values('year','week','material','division','vendor','name1')
     data_t024=SE16N_T024.objects.values('year','week','purchasing_group','description_p_group')
+    data_appro_spec=Apro_spec.objects.values()
 
 
     #Convert to dataFrame
     df_t024=pd.DataFrame(list(data_t024))
+    df_appro_spec=pd.DataFrame(list(data_appro_spec))
     df_zpp=pd.DataFrame(list(data_zpp))
     df_st=pd.DataFrame(list(data_st))
     df_mb52=pd.DataFrame(list(data_mb52))
@@ -1104,7 +1103,7 @@ def overview(request):
     # ZPP and  ST
     ##############################
     # #Add key to DF
-    df_zpp['key']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['material'].astype(str)+df_zpp['division'].astype(str)
+    # df_zpp['key']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['material'].astype(str)+df_zpp['division'].astype(str)
     df_st['key']=df_st['year'].astype(str)+df_st['week'].astype(str)+df_st['material'].astype(str)+df_st['division'].astype(str)
     # #Convert to Dict
     df_st_dict_num_parcel=dict(zip(df_st.key,df_st.num_parcel))
@@ -1253,6 +1252,15 @@ def overview(request):
     
     df_zpp['a_s']=df_zpp['key'].map(df_mara_marc_dict_a_s)
 
+    #Supply Division 
+    df_appro_spec_dict=dict(zip(df_appro_spec.appro_type,df_appro_spec.division))
+    df_zpp['supply_division']=df_zpp['a_s'].map(df_appro_spec_dict).astype('Int64')
+    df_zpp['supply_division_key']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['material'].astype(str)+df_zpp['supply_division'].astype(str)
+    df_zpp['division_key']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['material'].astype(str)+df_zpp['division'].astype(str)
+    df_supply_division_dict=dict(zip(df_zpp.division_key,df_zpp.warehouse_stock))
+    df_zpp['stock_supply_division']=df_zpp['supply_division_key'].map(df_supply_division_dict)
+
+
     df_zpp['mrp_area']=df_zpp['key'].map(df_mara_marc_dict_mrp_area)
     #purchasing_group_designation
     df_zpp['key_mrp_area']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['material'].astype(str)+df_zpp['mrp_area'].astype(str)
@@ -1291,6 +1299,7 @@ def overview(request):
 
     ##############################
     overview.df_zpp=df_zpp
+    # df_zpp.to_csv('zpp.csv')
     #Pagination
     #Convert  DataFrame to Dic
     records=df_zpp.to_dict(orient='records')

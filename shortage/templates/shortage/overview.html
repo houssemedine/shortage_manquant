@@ -60,6 +60,8 @@
                                       <tr>
                                       <th scope="col">View all</th>
                                       <th scope="col">ID</th>
+                                      <th scope="col">Supply Division</th><!-- To delete -->
+                                      <th scope="col">Stock Supply Division</th><!-- To move -->
                                       <th scope="col">Material</th>
                                       <th scope="col">Division</th>
                                       <th scope="col">Mrp Area</th>
@@ -78,6 +80,7 @@
                                       {% for data in records %}
                                       <tr>
                                         <td>
+                                          <!-- Modal Data -->
                                           <button type="button" class="btn btn-primary-outline" 
                                           data-dpr='{{data.dpr}}'  
                                           data-tyar='{{data.tyar}}'
@@ -100,6 +103,8 @@
                                           </button>
                                         </td>
                                           <td>{{data.id}}</td>
+                                          <td>{{data.supply_division}}</td> <!-- To delete -->
+                                          <td>{{data.stock_supply_division}}</td> <!-- To move -->
                                           <td>{{data.material}}</td>
                                           <td>{{data.division}}</td>
                                           <td>{{data.mrp_area}}</td>
@@ -186,9 +191,6 @@
       var lot_qm  = $(event.relatedTarget).data('lot_qm'); 
       
 
-      {% comment %} var validated_delivery_date  = $(event.relatedTarget).data('validated_delivery_date'); {% endcomment %}
-      {% comment %} var confirmed_quantity  = $(event.relatedTarget).data('confirmed_quantity '); {% endcomment %}
-      {% comment %} var vendor_name  = $(event.relatedTarget).data('vendor_name '); {% endcomment %}
       document.getElementById("datatable").innerHTML="<td>"+dpr+"</td><td>"+tyar+"</td><td>"+mp+"</td><td>"+a_s+"</td><td>"+planification_type+"</td><td>"+lot_qm+"</td><td>"+mrp_element+"</td><td>"+delivery_qty+"</td><td>"+num_parcel+"</td><td>"+warehouse_stock+"</td><td>"+workshop_stock+"</td><td>"+stock_zpush+"</td><td>"+stock_quality+"</td><td>"+other_stocks+"</td>";
       
     });
