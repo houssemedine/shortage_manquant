@@ -19,11 +19,14 @@ from administration.templates import administration
 import urllib.request
 from django.http import HttpResponse
 from shortage.models import *
+import time
 #function to upload files
 
 
 def upload(request):
     # Delete all data before upload
+    start_time = time.time()
+
     MB52.objects.all().delete()
     SE16N_CEPC.objects.all().delete()
     SE16N_T001L.objects.all().delete()
@@ -35,7 +38,16 @@ def upload(request):
     ZPP_MD_Stock.objects.all().delete()
     Z_SC_M_0002.objects.all().delete()
     Z_SC_P_0004.objects.all().delete()
+    print('Time for Delete Files')
+    print("--- %s seconds ---" % (time.time() - start_time))
+
+    start_time = time.time()
+
     uploaded_files(request)  #call function to upload files
+
+    print('Time for Upload Files')
+    print("--- %s seconds ---" % (time.time() - start_time))
+
     return redirect ('files_list')
     # file=r'\\centaure\Extract_SAP\140-COGI\COGI_202223.XLSX'
     # df=pd.read_excel(file)
@@ -1069,10 +1081,13 @@ def overview(request):
     data_zcm0002=Z_SC_M_0002.objects.values('year','week','material','division','vendor','name1')
     data_t024=SE16N_T024.objects.values('year','week','purchasing_group','description_p_group')
     data_appro_spec=Apro_spec.objects.values()
+    data_zscp0004=Z_SC_P_0004.objects.values('year','week','material','division','notice','created_on')
+
 
 
     #Convert to dataFrame
     df_t024=pd.DataFrame(list(data_t024))
+    df_zscp0004=pd.DataFrame(list(data_zscp0004))
     df_appro_spec=pd.DataFrame(list(data_appro_spec))
     df_zpp=pd.DataFrame(list(data_zpp))
     df_st=pd.DataFrame(list(data_st))
@@ -1099,6 +1114,16 @@ def overview(request):
     ##############################
     df_zpp['key']=df_zpp['year'].astype(str)+df_zpp['week'].astype(str)+df_zpp['material'].astype(str)+df_zpp['division'].astype(str)
     df_zpp['lot_qm_sum']=df_zpp['key'].map(df_zpp_lot_qm_dict)
+
+    ##############################
+    # Reception notification number
+    ##############################
+    df_zscp0004['key']=df_zscp0004['year'].astype(str)+df_zscp0004['week'].astype(str)+df_zscp0004['material'].astype(str)+df_zscp0004['division'].astype(str)
+    df_zscp0004_dict_notice=dict(zip(df_zscp0004.key,df_zscp0004.notice))
+    df_zscp0004_dict_created_on=dict(zip(df_zscp0004.key,df_zscp0004.created_on))
+    df_zpp['reception_notification_number']=df_zpp['key'].map(df_zscp0004_dict_notice)
+    df_zpp['reception_notification_creation_date']=df_zpp['key'].map(df_zscp0004_dict_created_on)
+    df_zpp['reception_notification_creation_date']=pd.to_datetime(df_zpp['reception_notification_creation_date']).dt.strftime('%d/%m/%Y')
     ##############################
     # ZPP and  ST
     ##############################
@@ -1200,7 +1225,9 @@ def overview(request):
     df_zpp['ongoing_po']=df_zpp['purchase_document'].astype(str)+'-'+df_zpp['poste1'].astype(str)
     del df_zpp['purchase_document']
     del df_zpp['poste1']
-    # df_zpp['confirmed_delivery_date']=df_zpp['key'].map(df_zmm_dict_validated_delivery_date)
+    df_zpp['confirmed_delivery_date']=df_zpp['key'].map(df_zmm_dict_validated_delivery_date)
+    #To avoid 'NaTType does not support utcoffset'
+    df_zpp['confirmed_delivery_date']=df_zpp['confirmed_delivery_date'].astype(str)
     df_zpp['quantity_to_receive']=df_zpp['key'].map(df_zmm_dict_confirmed_quantity)
     df_zpp['procurement_agent']=df_zpp['key'].map(df_zmm_dict_purchasing_group)
     df_zpp['po_supplier']=df_zpp['key'].map(df_zmm_dict_vendor_name)
@@ -1299,7 +1326,7 @@ def overview(request):
 
     ##############################
     overview.df_zpp=df_zpp
-    # df_zpp.to_csv('zpp.csv')
+    df_zpp.to_csv('zpp.csv')
     #Pagination
     #Convert  DataFrame to Dic
     records=df_zpp.to_dict(orient='records')

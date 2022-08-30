@@ -60,8 +60,8 @@
                                       <tr>
                                       <th scope="col">View all</th>
                                       <th scope="col">ID</th>
-                                      <th scope="col">Supply Division</th><!-- To delete -->
-                                      <th scope="col">Stock Supply Division</th><!-- To move -->
+                                      <th scope="col">reception_notification_number</th>
+                                      <th scope="col">reception_notification_creation_date</th>
                                       <th scope="col">Material</th>
                                       <th scope="col">Division</th>
                                       <th scope="col">Mrp Area</th>
@@ -97,14 +97,20 @@
                                           data-other_stocks='{{data.other_stocks}}'
                                           data-ongoing_po='{{data.ongoing_po}}'
                                           data-lot_qm='{{data.lot_qm_sum}}'
+                                          data-supply_division='{{data.supply_division}}'
+                                          data-stock_supply_division='{{data.stock_supply_division}}'
+                                          data-confirmed_delivery_date='{{data.confirmed_delivery_date}}'
+                                          data-quantity_to_receive='{{data.quantity_to_receive}}'
+                                          data-procurement_agent='{{data.procurement_agent}}'
+
                                           
                                           data-toggle="modal" data-target="#viewall">
                                             <i class="fa-regular fa-folder-open"></i>
                                           </button>
                                         </td>
                                           <td>{{data.id}}</td>
-                                          <td>{{data.supply_division}}</td> <!-- To delete -->
-                                          <td>{{data.stock_supply_division}}</td> <!-- To move -->
+                                          <td>{{data.reception_notification_number}}</td>
+                                          <td>{{data.reception_notification_creation_date}}</td>
                                           <td>{{data.material}}</td>
                                           <td>{{data.division}}</td>
                                           <td>{{data.mrp_area}}</td>
@@ -148,6 +154,7 @@
                         <th scope="col">Special Procurement type</th>
                         <th scope="col">Planification type</th>
                         <th scope="col">Lot QM</th>
+                        <th scope="col">MRP Element</th>
                         <th scope="col">Stock in transit</th>
                         <th scope="col">Package number</th>
                         <th scope="col">Warehouse Stock</th>
@@ -156,6 +163,15 @@
                         <th scope="col">Stock Quality</th>
                         <th scope="col">Other Stocks</th>             
                         <th scope="col">Ongoing PO</th>
+                        <th scope="col">Supply Division</th>
+                        <th scope="col">Stock Supply Division</th>
+                        <th scope="col">Confirmed delivery date</th>
+                        <th scope="col">Quantity to receive</th>
+                        <th scope="col">Procurement agent</th>
+
+                        
+
+                        
                         </tr>
                     </thead>
                 <tbody >
@@ -180,6 +196,7 @@
       var mp = $(event.relatedTarget).data('mp');
       var a_s = $(event.relatedTarget).data('a_s');
       var planification_type = $(event.relatedTarget).data('planification_type');
+      var lot_qm  = $(event.relatedTarget).data('lot_qm'); 
       var mrp_element = $(event.relatedTarget).data('mrp_element');
       var delivery_qty = $(event.relatedTarget).data('delivery_qty');
       var num_parcel  = $(event.relatedTarget).data('num_parcel'); 
@@ -188,14 +205,62 @@
       var stock_zpush  = $(event.relatedTarget).data('stock_zpush'); 
       var stock_quality  = $(event.relatedTarget).data('stock_quality'); 
       var other_stocks  = $(event.relatedTarget).data('other_stocks'); 
-      var lot_qm  = $(event.relatedTarget).data('lot_qm'); 
-      
+      var ongoing_po  = $(event.relatedTarget).data('ongoing_po'); 
+      var supply_division  = $(event.relatedTarget).data('supply_division'); 
+      var stock_supply_division  = $(event.relatedTarget).data('stock_supply_division'); 
+      var confirmed_delivery_date  = $(event.relatedTarget).data('confirmed_delivery_date'); 
+      var quantity_to_receive  = $(event.relatedTarget).data('quantity_to_receive'); 
+      var procurement_agent  = $(event.relatedTarget).data('procurement_agent'); 
 
-      document.getElementById("datatable").innerHTML="<td>"+dpr+"</td><td>"+tyar+"</td><td>"+mp+"</td><td>"+a_s+"</td><td>"+planification_type+"</td><td>"+lot_qm+"</td><td>"+mrp_element+"</td><td>"+delivery_qty+"</td><td>"+num_parcel+"</td><td>"+warehouse_stock+"</td><td>"+workshop_stock+"</td><td>"+stock_zpush+"</td><td>"+stock_quality+"</td><td>"+other_stocks+"</td>";
       
+      
+      
+      document.getElementById("datatable").innerHTML=
+        "<td>"
+        +dpr+
+        "</td><td>"
+        +tyar+
+        "</td><td>"
+        +mp+
+        "</td><td>"
+        +a_s+
+        "</td><td>"
+        +planification_type+
+        "</td><td>"
+        +lot_qm+
+        "</td><td>"
+        +mrp_element+
+        "</td><td>"
+        +delivery_qty+
+        "</td><td>"
+        +num_parcel+
+        "</td><td>"
+        +warehouse_stock+
+        "</td><td>"
+        +workshop_stock+
+        "</td><td>"
+        +stock_zpush+
+        "</td><td>"
+        +stock_quality+
+        "</td><td>"
+        +other_stocks+
+        "</td><td>"
+        +ongoing_po+
+        "</td><td>"
+        +supply_division+
+        "</td><td>"
+        +stock_supply_division+
+        "</td><td>"
+        +confirmed_delivery_date+
+        "</td><td>"
+        +quantity_to_receive+
+        "</td><td>"
+        +procurement_agent+
+        "</td>";
+        
     });
   
-   $(document).ready(function(){
+    $(document).ready(function(){
           $('[data-toggle="tooltip"]').tooltip({
               placement : 'top'
           });

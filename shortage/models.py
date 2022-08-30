@@ -156,7 +156,7 @@ class ZMM_CARNET_CDE_IS(models.Model): #Model For File  ZMM_CARNET_CDE_IS
      desired_date = models.DateTimeField(null=True)               #date souhaitée	
      original_delivery_date = models.DateTimeField(null=True)               #Date de livraison initiale				
      contractual_delivery_date = models.DateTimeField(null=True)               #Date de livraison contractulle	
-     validated_delivery_date = models.DateTimeField(null=True)               #Date de livraison validée	
+     validated_delivery_date = models.DateField(null=True)               #Date de livraison validée	
      confirmed_quantity = models.FloatField(null=True)              #Quantité confirmée
      comment = models.CharField(max_length=500,null=True) #Commentaire Appros				           
      expected_stock_week_w = models.CharField(max_length=30,null=True)              #Stock Prévu Semaine S		
